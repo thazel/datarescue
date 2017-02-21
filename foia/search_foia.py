@@ -88,7 +88,7 @@ class FoiaSearchRunner:
 
   def run(self):
     # trouble letters: ['i', 'j', 'l', 'm']
-    for letter in string.ascii_lowercase:
+    for letter in ['j', 'l', 'm']: #string.ascii_lowercase:
       # get cookies each time
       self.request_context = self.loadRequestContext()
       
@@ -122,11 +122,11 @@ class FoiaSearchRunner:
           t.start()
         url_queue.join()
 
-      print "Processing complete. Set size: {}, Time: {}\n".format(sys.getsizeof(processed_objects),  str(time.time()))
-      output_file.flush()
+      print "Processing complete. Set size: {}, Time: {}\n".format(sys.getsizeof(self.search_state.getProcessedObjects()),  str(time.time()))
+      self.output_file.flush()
 
-    output_file.close()
-    error_file.close()
+    self.output_file.close()
+    self.error_file.close()
     
   def loadRequestContext(self):
     cookie_response = self.make_request(self.cookie_url, None)
