@@ -6,7 +6,7 @@ search_foia.py
 Queries the foiaonline.regulations.gov to retrieve (or attempt to, at least) all of the Freedom Of
 Information Act requests stored in that system.
 
-A very rudimentary multi-threaded approach is used speed things up a little. Adding the
+A rudimentary multi-threaded approach is used speed things up a little. Adding the
 multi-threading makes the script somewhat brittle (pthread_cond_wait: Resource busy)
 """
 
@@ -87,7 +87,8 @@ class FoiaSearchRunner:
     self.error_file = open(self.error_file_path, 'a')
 
   def run(self):
-    for letter in ['i', 'j', 'l', 'm']: #string.ascii_lowercase[11:17]:
+    # trouble letters: ['i', 'j', 'l', 'm']
+    for letter in string.ascii_lowercase:
       # get cookies each time
       self.request_context = self.loadRequestContext()
       
@@ -163,17 +164,11 @@ class FoiaSearchRunner:
 
   def process_url(self, url_queue, lock, output_file, error_file, search_state):
     while not url_queue.empty():
-      #print "t1: " + str(time.time())
       time.sleep(random.random())
-      #print "t2: " + str(time.time())
       url = url_queue.get()
-      #print "t3: " + str(time.time())
       search_result = self.make_request(url, self.request_context.cookie_jar)
-      #print "t4: " + str(time.time())
       self.parse_result(search_result, output_file, error_file, search_state, url, lock)
-      #print "t5: " + str(time.time())
       url_queue.task_done()
-      #print "t6: " + str(time.time())
 
   def parse_result(self, result_text, output_file, error_file, search_state, url, lock):
     processed_objects = search_state.getProcessedObjects()
