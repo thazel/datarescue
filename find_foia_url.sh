@@ -96,11 +96,11 @@ for i in ${suffixes[*]}; do
   url=$BASE_RECORD_URL$BASE_OBJECT_ID$i
   result=$(curl --silent --fail $url)
   if [[ $(echo $result | grep -i $SUCCESS_TEXT) ]]
-    then echo $url >> "good.txt"
+    then echo $url >> $base_dir/$DATA_DIR/$GOOD_FILE_NAME
   elif [[ $(echo $result | grep -i $NON_PUBLIC_TEXT) ]]
-    then echo $url >> "non_public.txt"
+    then echo $url >> $base_dir/$DATA_DIR/$NOT_PUBLIC_FILE_NAME
   elif [[ ! $(echo $result | grep -i $EXPECTED_ERROR_TEXT) ]]
-    then echo $url >> "unknown.txt"
+    then echo $url >> $base_dir/$DATA_DIR/$UNKNOWN_ERROR_FILE_NAME
   fi
 done
 
